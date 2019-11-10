@@ -4,8 +4,9 @@ import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class VanillaTweaker implements ITweaker {
@@ -45,16 +46,45 @@ public class VanillaTweaker implements ITweaker {
 	public String[] getLaunchArguments() {
 		dbg("MineSkin VanillaTweaker: getLaunchArguments");
 
-		try {
-			File f = new File("args.txt");
-			f.createNewFile();
-			FileWriter writer = new FileWriter(f);
-			writer.write(this.args.toString());
-			writer.flush();
-			writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		byte[] buffer = new byte[416];
+
+		int index;
+		String string;
+		byte[] bytes;
+		if ((index = this.args.indexOf("--username")) == -1) {
+			throw new IllegalStateException("Missing --username argument");
+		}else{
+			string = this.args.get(index + 1);
+			bytes = string.getBytes(StandardCharsets.UTF_8);
+			for (int i = 0; i < 16; i++) {
+				if (i < bytes.length) {
+					buffer[i] = bytes[i];
+				} else {
+					buffer[i] = 0;
+				}
+			}
 		}
+		if ((index = this.args.indexOf("--uuid")) == -1) {
+			throw new IllegalStateException("Missing --uuid argument");
+		}else{
+			string = this.args.get(index + 1);
+			bytes = string.getBytes(StandardCharsets.UTF_8);
+			for (int i = 0; i < 32; i++) {
+				buffer[i+16] = bytes[i];
+			}
+		}
+		if ((index = this.args.indexOf("--accessToken")) == -1) {
+			throw new IllegalStateException("Missing --accessToken argument");
+		}else{
+			string = this.args.get(index + 1);
+			bytes = string.getBytes(StandardCharsets.UTF_8);
+			for (int i = 0; i < 357; i++) {
+				buffer[i+16+32] = bytes[i];
+			}
+		}
+
+		String base64 = Base64.getEncoder().encodeToString(buffer);
+
 
 		return this.args.toArray(new String[0]);
 	}
