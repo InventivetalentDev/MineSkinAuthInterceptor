@@ -1,0 +1,28 @@
+{
+  "id": "1.14.4-mineskin",
+  "time": "2019-02-04T19:48:49+0000",
+  "releaseTime": "1960-01-01T00:00:00-0700",
+  "type": "release",
+  "arguments": {
+    "game": [
+      "--tweakClass",
+      "org.mineskin.authinterceptor.Tweaker"
+    ]
+  },
+  "mainClass": "net.minecraft.launchwrapper.Launch",
+  "mcVersion": "1.14.4",
+  "inheritsFrom": "1.14.4",
+  "libraries": [
+    {
+      "name": "org.mineskin:auth-interceptor:1.0.0-SNAPSHOT",
+      "MMC-hint": "local"
+    },
+    {
+      "name": "net.minecraft:launchwrapper:1.12"
+    },
+    {
+      "name": "org.ow2.asm:asm-all:5.2",
+      "url": "http://files.minecraftforge.net/maven/"
+    }
+  ]
+}
