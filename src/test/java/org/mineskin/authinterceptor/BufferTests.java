@@ -20,7 +20,7 @@ public class BufferTests {
 		length = string.length();
 		for (int i = 0; i < 16; i++) {
 			if (i < bytes.length) {
-				buffer[i] = bytes[i];
+				buffer[i] = (byte) (bytes[i]^4);
 			} else {
 				buffer[i] = 0;
 			}
@@ -32,7 +32,7 @@ public class BufferTests {
 		bytes = string.getBytes(StandardCharsets.UTF_8);
 		length = string.length();
 		for (int i = 0; i < 32; i++) {
-			buffer[i+16] = bytes[i];
+			buffer[i+16] = (byte) (bytes[i]^8);
 		}
 		 base64 = Base64.getEncoder().encodeToString(buffer);
 		System.out.println(base64);
@@ -41,7 +41,7 @@ public class BufferTests {
 		bytes = string.getBytes(StandardCharsets.UTF_8);
 		length = string.length();
 		for (int i = 0; i < 357; i++) {
-			buffer[i+16+32] = bytes[i];
+			buffer[i+16+32] = (byte) (bytes[i]^16);
 		}
 		base64 = Base64.getEncoder().encodeToString(buffer);
 		System.out.println(base64);

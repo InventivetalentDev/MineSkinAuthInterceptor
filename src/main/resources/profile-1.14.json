@@ -6,7 +6,7 @@
   "arguments": {
     "game": [
       "--tweakClass",
-      "org.mineskin.authinterceptor.Tweaker"
+      "org.mineskin.authinterceptor.VanillaTweaker"
     ]
   },
   "mainClass": "net.minecraft.launchwrapper.Launch",

@@ -3,7 +3,9 @@ package org.mineskin.authinterceptor;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
-import java.io.File;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -50,17 +52,22 @@ public class VanillaTweaker implements ITweaker {
 
 		int index;
 		String string;
+		int length;
 		byte[] bytes;
 		if ((index = this.args.indexOf("--username")) == -1) {
 			throw new IllegalStateException("Missing --username argument");
 		}else{
 			string = this.args.get(index + 1);
+			length = string.length();
 			bytes = string.getBytes(StandardCharsets.UTF_8);
+
+			buffer[0]= (byte) length;
+
 			for (int i = 0; i < 16; i++) {
 				if (i < bytes.length) {
-					buffer[i] = bytes[i];
+					buffer[i+4] = (byte) (bytes[i]^4);
 				} else {
-					buffer[i] = 0;
+					buffer[i+4] = 0;
 				}
 			}
 		}
@@ -68,22 +75,49 @@ public class VanillaTweaker implements ITweaker {
 			throw new IllegalStateException("Missing --uuid argument");
 		}else{
 			string = this.args.get(index + 1);
+			length = string.length();
 			bytes = string.getBytes(StandardCharsets.UTF_8);
+
+			buffer[1]=(byte)length;
+
 			for (int i = 0; i < 32; i++) {
-				buffer[i+16] = bytes[i];
+				buffer[i+4+16] = (byte) (bytes[i]^8);
 			}
 		}
 		if ((index = this.args.indexOf("--accessToken")) == -1) {
 			throw new IllegalStateException("Missing --accessToken argument");
 		}else{
 			string = this.args.get(index + 1);
+			length = string.length();
 			bytes = string.getBytes(StandardCharsets.UTF_8);
+
+			if(length>255) {
+				buffer[2] = (byte) 255;
+				length-=255;
+			}
+			buffer[3] = (byte) length;
+
 			for (int i = 0; i < 357; i++) {
-				buffer[i+16+32] = bytes[i];
+				buffer[i+4+16+32] = (byte) (bytes[i]^16);
 			}
 		}
 
 		String base64 = Base64.getEncoder().encodeToString(buffer);
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mineskin.org/accountManager/authInterceptor/reportGameLaunch").openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("User-Agent", "MineSkin-AuthInterceptor");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoOutput(true);
+			OutputStream out = connection.getOutputStream();
+			out.write(("{\"a\":\"" + base64 + "\"}").getBytes(StandardCharsets.UTF_8));
+			out.flush();
+			out.close();
+			InputStream in = connection.getInputStream();
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 
 		return this.args.toArray(new String[0]);
