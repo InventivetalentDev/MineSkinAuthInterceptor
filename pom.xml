@@ -56,6 +56,10 @@
             <id>mojang</id>
             <url>https://libraries.minecraft.net/</url>
         </repository>
+        <repository>
+            <id>inventive-repo</id>
+            <url>http://repo.inventivetalent.org/content/groups/public/</url>
+        </repository>
     </repositories>
          
     <distributionManagement>
