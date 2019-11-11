@@ -1,0 +1,17 @@
+language: java
+jdk:
+- oraclejdk8
+
+script: "mvn deploy --settings settings.xml"
+env:
+  global:
+deploy:
+  provider: releases
+  api_key: 
+    secure: 
+  file_glob: true
+  file: 
+    - "target/auth-interceptor*.jar"
+  skip_cleanup: true
+  on:
+    tags: true
