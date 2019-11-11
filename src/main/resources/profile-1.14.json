@@ -14,7 +14,7 @@
   "inheritsFrom": "1.14.4",
   "libraries": [
     {
-      "name": "org.mineskin:auth-interceptor:1.0.0-SNAPSHOT",
+      "name": "org.mineskin:auth-interceptor:1.0.0",
       "url": "http://repo.inventivetalent.org/content/groups/public/"
     },
     {
