@@ -15,7 +15,7 @@
   "libraries": [
     {
       "name": "org.mineskin:auth-interceptor:1.0.0-SNAPSHOT",
-      "MMC-hint": "local"
+      "url": "http://repo.inventivetalent.org/content/groups/public/"
     },
     {
       "name": "net.minecraft:launchwrapper:1.12"
